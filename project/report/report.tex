@@ -1,0 +1,76 @@
+\documentclass[titlepage]{article}
+\usepackage{amsmath}
+\usepackage[capitalise, dutch]{cleveref}
+\usepackage[labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage[outdir=../plots/]{epstopdf}
+\usepackage[section]{placeins}
+\usepackage[backend=biber,citestyle=numeric,style=ieee]{biblatex}
+\usepackage{siunitx}
+\usepackage[main=dutch]{babel}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{derivative}
+\usepackage[T1]{fontenc}
+
+\graphicspath{{../plots/}}
+\addbibresource{bibliography.bib}
+\sisetup{output-exponent-marker=\ensuremath{\mathrm{e}}}
+
+\title{Theorie \& praktijk van eindige elementen methoden: programmeeropdracht}
+\author{Othman El Hammouchi}
+
+\begin{document}
+
+\begin{titlepage}
+  \maketitle
+\end{titlepage}
+
+De functie \texttt{fem\_solve} in het bestand \texttt{helpers.py} implementeert een eindige elementen-methode
+voor het oplossen van de eendimensionale diffusievergelijking
+\begin{equation} \label{eq:heat}
+  -k \odv[order=2]{T}{x} = q \,,
+\end{equation}
+die de hitte beschrijft in een staaf van niet-homogeen materiaal. Het oplossingsdomein wordt verkregen op de wijze die in de opdracht geschetst werd, en de randvoorwaarden zijn $T(0) = 100$ en $\odv{T}{x}_{L} = 0$. De analytische oplossing wordt berekend in de functie \texttt{exact\_solve}, en het bestand \texttt{main.py} bevat code om de twee grafisch te vergelijken en een empirische foutanalyse uit te voeren. Teneinde grotere algemeenheid te verkrijgen worden de elementen en knopen zoals gevraagd gepermuteerd alvorens ze in de hoofdlus van de solver belanden; \cref{tab:elems,tab:nodes} tonen de eerste 10 elementen en knopen die op deze manier verkregen werden. \Cref{fig:sol-plot} vergelijkt de exact en eindige elementen-oplossingen, en hieruit blijkt duidelijk dat het verschil tussen beiden minimaal is, hetgeen de nauwkeurigheid van de numerieke oplossingsmethode illustreert. De benadering van de gradi\"ent, die in \cref{fig:grad-plot} weergegeven wordt, vertoont een verloop dat overeenkomt met onze verwachtingen: het is stuksgewijs constant in de gebieden zonder warmteproductie ten gevolge van de verschillende materiaalconstanten, en stijgt/daalt lineair op de intervallen waar warmte wordt toegevoegd. Tenslotte bevat \cref{fig:error-plot} een dubbellogaritmische weergave van de gemiddelde kwadratische fout, en dit verschaft een empirische bevestiging van de tweedeordenauwkeurigheid van deze methode: we zien dat de fout met tweede ordegroottes afneemt wanneer de elementbreedte met \'e\'en ordegrootte wordt gereduceerd.
+
+\begin{figure}[!htb]
+  \begin{displaymath}
+    \input{../results/elems.tex}    
+  \end{displaymath}
+  \caption{Eerste 10 elementen}
+  \label{tab:elems}
+\end{figure}
+
+\begin{figure}[!htb]
+  \begin{displaymath}
+    \input{../results/nodes.tex}
+  \end{displaymath}
+  \caption{Eerste 10 knopen}
+  \label{tab:nodes}
+\end{figure}
+
+\begin{figure}[!p]
+  \begin{subfigure}{\linewidth}
+    \centering
+    \includegraphics{sol}
+    \subcaption{Exacte en eindige elementen-oplossing}
+    \label{fig:sol-plot}
+  \end{subfigure}
+  \begin{subfigure}{\linewidth}
+    \centering
+    \includegraphics{grad}
+    \subcaption{Benadering van de gradi\"ent}
+    \label{fig:grad-plot}
+  \end{subfigure}
+  \caption{Grafieken verkregen bij de oplossing van \cref{eq:heat}. De lichtblauwe stroken duiden de gebieden aan waarin warmte wordt toegevoegd.}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics{error}
+  \caption{Dubbellogaritmische weergave van de fout als functie van de elementgrootte}
+  \label{fig:error-plot}
+\end{figure}
+
+\end{document}
